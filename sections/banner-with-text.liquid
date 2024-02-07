@@ -1,0 +1,257 @@
+{{ 'banner-with-text.css' | asset_url | stylesheet_tag }}
+
+<style>
+    .banner-with-text__flex__text-item{
+        padding: 0 0 0 4rem;
+        max-width: 46.6rem;
+        width: 40%;
+        align-self: {{section.settings.text_alignment}};
+    }
+
+    .banner-with-text__mainheading-{{ section.id }}{
+        margin: 0;
+        color:{{section.settings.heading_text_color}};
+    }
+
+    .banner-with-text__secondaryheading-{{ section.id }}{
+        color:{{section.settings.sub_heading_text_color}};
+        margin: 1.2rem 0 3.2rem;
+        letter-spacing: -.03em;
+    }
+
+    .banner-with-text__initialbtn-{{ section.id }}{
+        padding: .2rem 0;
+        font-weight: 500px;
+        font-size: 12px;
+        color:{{section.settings.initial_button_color}};
+        position:relative;
+        margin-right:3rem;
+    }
+
+    .banner-with-text__secondarybtn-{{ section.id }}{
+        padding: .2rem 0;
+        font-weight: 500px;
+        font-size: 12px;
+        color:{{section.settings.initial_button_color}};
+        position:relative;
+    }
+
+    .banner-with-text__btnContainer-{{ section.id }} a::before{
+        position:absolute;
+        content:"";
+        height:2px;
+        width:0;
+        top:20px;
+        left:0;
+        background:{{section.settings.initial_button_color}};
+    }
+
+    .banner-with-text__btnContainer-{{ section.id }} a:hover::before{
+        width:100%;
+        transition:width 1s ease;
+    }
+
+    .banner-with-text__btnContainer-{{ section.id }} a:not(hover)::before{
+        width:0%;
+        transition:width 1s ease;
+    }
+
+    .padding-{{ section.id }} {
+        padding-top: {{ section.settings.padding_top | divided_by: 2 }}px;
+        padding-bottom: {{ section.settings.padding_bottom | divided_by: 2 }}px;
+    }
+    
+    @media (min-width: 750px) {
+        .padding-{{ section.id }} {
+          padding-top: {{ section.settings.padding_top }}px;
+          padding-bottom: {{ section.settings.padding_bottom }}px;
+        }
+    }
+
+    @media (max-width: 750px) {
+        .banner-with-text__flex__text-item{
+            min-width: 100%;
+            padding-left: 0;
+        }
+    }
+</style>
+
+<div class='banner-with-text padding-{{ section.id }}'>
+    <div class='page-width'>
+        <div class='banner-with-text__flex'>
+            <div class='banner-with-text__flex__image-item'>  
+                {% if section.settings.image != blank and section.settings.image_mobile != blank%}
+                    {% render 'responsive-image', 
+                        mobileImage: section.settings.image_mobile, 
+                        desktopImage: section.settings.image 
+                    %}
+                    {% else %}
+                    <div class="media media--square">
+                        {{ 'detailed-apparel-1' | placeholder_svg_tag }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="banner-with-text__flex__text-item">
+                {% if section.settings.heading_text != blank %}
+                  <div class="h2 banner-with-text__mainheading-{{ section.id }}">{{ section.settings.heading_text }}</div>
+                {% endif %}
+                {% if section.settings.sub_heading_text != blank %}
+                  <div class="h4 banner-with-text__secondaryheading-{{ section.id }}">{{ section.settings.sub_heading_text }}</div>
+                {% endif %}
+                <div class='banner-with-text__btnContainer-{{ section.id }}'>
+                    {%- if section.settings.initial_button_text != blank -%}
+                    <a
+                        {% if section.settings.initial_button_link == blank %}
+                        role="link" aria-disabled="true"
+                        {% else %}
+                        href="{{ section.settings.initial_button_link }}"
+                        {% endif %}
+                        class="banner-with-text__initialbtn-{{ section.id }}"
+                    >
+                        {{- section.settings.initial_button_text | escape -}}
+                    </a>
+                    {%- endif -%}
+                    {%- if section.settings.secondary_button_text != blank -%}
+                        <a
+                        {% if section.settings.secondary_button_link == blank %}
+                            role="link" aria-disabled="true"
+                        {% else %}
+                            href="{{ section.settings.secondary_button_link }}"
+                        {% endif %}
+                        class="banner-with-text__secondarybtn-{{ section.id }}"
+                        >
+                        {{- section.settings.secondary_button_text | escape -}}
+                        </a>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+  {
+    "name": "Banner with Text",
+    "tag": "section",
+    "class": "banner-with-text",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Image settings"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Desktop Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_mobile",
+        "label": "Mobile Image"
+      },
+      {
+        "type": "header",
+        "content": "Content settings"
+      },
+      {
+        "type": "text",
+        "id": "heading_text",
+        "label": "Heading",
+        "default": "Heading"
+      },
+      {
+        "type": "color",
+        "id": "heading_text_color",
+        "label": "Heading color",
+        "default": "#000000"
+      },
+      {
+        "type": "text",
+        "id": "sub_heading_text",
+        "label": "Sub heading",
+        "default": "sub heading text"
+      },
+      {
+        "type": "color",
+        "id": "sub_heading_text_color",
+        "label": "Sub heading color",
+        "default": "#838282"
+      },
+      {
+        "type": "text",
+        "id": "initial_button_text",
+        "label": "Inital Button text",
+        "default": "Initial Button text"
+      },
+      {
+        "type": "url",
+        "id": "initial_button_link",
+        "label": "Inital Button link"
+      },
+      {
+        "type": "color",
+        "id": "initial_button_color",
+        "label": "Inital Button color",
+        "default": "#000000"
+      },
+      {
+        "type": "text",
+        "id": "secondary_button_text",
+        "label": "Secondary Button text",
+        "default": "secondary Button text"
+      },
+      {
+        "type": "url",
+        "id": "secondary_button_link",
+        "label": "Secondary Button link"
+      },
+      {
+        "type": "color",
+        "id": "secondary_button_color",
+        "label": "Secondary Button color",
+        "default": "#000000"
+      },
+      {
+        "type": "header",
+        "content": "Alignment settings"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Text alignment",
+        "options": [
+          { "value": "flex-start", "label": "Top" },
+          { "value": "center", "label": "Center" },
+          { "value": "flex-end", "label": "Bottom" }
+        ],
+        "default": "flex-end"
+      },
+      {
+        "type": "header",
+        "content": "Section padding"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding bottom",
+        "default": 36
+      }
+    ],
+    "presets": [{
+      "name": "Banner with Text"
+    }]
+  }
+{% endschema %}
